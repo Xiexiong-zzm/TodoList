@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="./vue.js"></script>
+</head>
+
+<body>
+    姓名：<span id="spanName"></span><br>
+    <input type="text" id="inputName">
+
+    <script>
+        // 使用Object.defineProperty对对象进行操作
+        // https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperty
+        // 1、对原始数据克隆2、 需要分别给对象中的每一个属性进行监听
+
+        let obj = {
+            name: ''
+        };
+        // 深克隆一份obj对象，防止在get函数执行过程中出现死循环
+        let newObj = JSON.parse(JSON.stringify(obj));
+        Object.defineProperty(obj, 'name', {
+            get() {
+                return newObj.name;
+            },
+            set(val) {
+                if (val === newObj.name) return;
+                newObj.name = val;
+                observer();
+            }
+        });
+
+        // 观察者
+        function observer() {
+            spanName.innerHTML = obj.name;
+            inputName.value = obj.name;
+
+        }
+
+        setTimeout(() => {
+            obj.name = 'xiexiong';
+        }, 2000);
+
+
+        inputName.oninput = function() {
+            obj.name = this.value;
+        }
+    </script>
+</body>
+
+</html>

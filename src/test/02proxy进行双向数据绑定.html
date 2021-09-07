@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    姓名：<span id="spanName"></span><br>
+    <input type="text" id="inputName">
+
+    <script>
+        /*ES6中的Proxy方法*/
+        let obj = {
+            name: '',
+            age: 0
+        };
+        obj = new Proxy(obj, {
+            // get(target,prop)----->target指的是当前监听的对象（obj）,prop指的是监听对象中的某个属性
+            get(target, prop) {
+                // console.log('A');
+                return target[prop];
+            },
+            set(target, prop, value) {
+                // console.log('B');
+                target[prop] = value;
+                observer();
+            }
+        })
+
+        function observer() {
+            spanName.innerHTML = obj.age;
+            inputName.value = obj.age;
+        }
+
+        setTimeout(() => {
+            obj.age = 24;
+        }, 2000);
+
+        inputName.oninput = function() {
+            obj.age = this.value;
+        }
+    </script>
+</body>
+
+</html>
